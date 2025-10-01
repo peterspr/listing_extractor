@@ -1,13 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@': __dirname,
-    };
-    return config;
-  },
+  // Let TypeScript handle path mapping via tsconfig.json
+  outputFileTracingRoot: __dirname,
 };
 
 export default nextConfig;
