@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:5000"
+    environment:
+      - BACKEND_HOST=0.0.0.0
+      - BACKEND_PORT=5000
+      - DEBUG=True
+      - CORS_ORIGINS=http://localhost:3000
+      - UPLOAD_FOLDER=/tmp/uploads
+      - RESULTS_FOLDER=/tmp/results
+    env_file:
+      - .env
+    volumes:
+      - ./config.yaml:/app/config.yaml
+      - backend-uploads:/tmp/uploads
+      - backend-results:/tmp/results
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:8000/api
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  backend-uploads:
+  backend-results:
+
+networks:
+  app-network:
+    driver: bridge

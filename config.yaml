@@ -1,0 +1,36 @@
+llm:
+  default_provider: "anthropic"  # anthropic, openai, google
+  anthropic:
+    model: "claude-3-5-haiku-20241022"
+    max_tokens: 1000
+  openai:
+    model: "gpt-4o-mini"
+    max_tokens: 1000
+  google:
+    model: "gemini-1.5-flash"
+    max_tokens: 1000
+
+extraction:
+  use_tabula: true
+  use_pdfplumber: true
+  tabula_options:
+    pages: "all"
+    multiple_tables: true
+    lattice: true
+
+output:
+  save_raw_extractions: false  # for debugging
+  append_to_existing: true     # append to CSV vs overwrite
+  
+logging:
+  level: "INFO"
+  file: "extractor.log"
+
+# Cost estimates per million tokens (USD)
+costs:
+  anthropic:
+    claude-3-5-haiku-20241022: 0.25
+  openai:
+    gpt-4o-mini: 0.15
+  google:
+    gemini-1.5-flash: 0.075
